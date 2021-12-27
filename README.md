@@ -18,6 +18,7 @@ Options:
   -b, --body <data>         Request body
   -d, --delay <delay>       Delay between issuing requests (ms)
   -H, --header <header>     Add a header to the request (can be specified multiple times)
+  -hh, --hosth <string>     Insert arbitrary Host name to check for host header injection
   -k, --keep-alive          Use HTTP Keep-Alive
   -m, --method              HTTP method to use (default: GET, or POST if body is specified)
   -M, --match <string>      Save responses that include <string> in the body
