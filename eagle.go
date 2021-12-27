@@ -30,6 +30,7 @@ func init() {
 			"  -b, --body <data>         Request body",
 			"  -d, --delay <delay>       Delay between issuing requests (ms)",
 			"  -H, --header <header>     Add a header to the request (can be specified multiple times)",
+			"  -hh, --hosth <string>     Insert arbitrary Host name to check for host header injection",
 			//"      --ignore-html         Don't save HTML files; useful when looking non-HTML files only",
 			//"      --ignore-empty        Don't save empty files",
 			"  -k, --keep-alive          Use HTTP Keep-Alive",
@@ -71,6 +72,11 @@ func main() {
 	var headers headerArgs
 	flag.Var(&headers, "header", "")
 	flag.Var(&headers, "H", "")
+
+	var hosth string
+	flag.StringVar(&hosth, "hosth", "", "")
+	flag.StringVar(&hosth, "hh", "", "")
+	//flag.Var(&headers, "host", "")
 
 	var method string
 	flag.StringVar(&method, "method", "GET", "")
@@ -147,10 +153,10 @@ func main() {
 				return
 			}
 
-        	// check for arbitrary Host flag
-        	//if len(strings.TrimSpace(hosth)) != 0 { 
-        	//    req.Host = hosth
-        	//}
+ 			if hosth != "" {
+				req.Host = hosth
+			}			
+
 
         	req.Header = map[string][]string{
 				//"Content-Type":         {bodyType},
