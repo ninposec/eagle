@@ -9,8 +9,10 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"log"
 	"net"
 	"net/http"
+	"net/http/httputil"
 	"net/url"
 	"os"
 	"path"
@@ -49,7 +51,6 @@ func init() {
 	}
 }
 
-
 func main() {
 
 	var requestBody string
@@ -60,7 +61,7 @@ func main() {
 	flag.BoolVar(&keepAlives, "keep-alive", false, "")
 	flag.BoolVar(&keepAlives, "keep-alives", false, "")
 	flag.BoolVar(&keepAlives, "k", false, "")
-	
+
 	var saveResponses bool
 	flag.BoolVar(&saveResponses, "save", false, "")
 	flag.BoolVar(&saveResponses, "S", false, "")
@@ -109,10 +110,10 @@ func main() {
 	flag.Parse()
 
 	// if no args are provided, print flags
-    if flag.NFlag() == 0 {
-        flag.Usage()
-        os.Exit(-1)
-    }
+	if flag.NFlag() == 0 {
+		flag.Usage()
+		os.Exit(-1)
+	}
 
 	delay := time.Duration(delayMs * 1000000)
 	client := newClient(keepAlives, proxy)
@@ -153,21 +154,19 @@ func main() {
 				return
 			}
 
- 			if hosth != "" {
+			if hosth != "" {
 				req.Host = hosth
-			}			
+			}
 
-
-        	req.Header = map[string][]string{
+			req.Header = map[string][]string{
 				//"Content-Type":         {bodyType},
-				"User-Agent":           {"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36"},
-        	    //"X-Test2":     {"test12"},
-        	    //"Connection":    {"close"},
+				"User-Agent": {"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36"},
+				//"X-Test2":     {"test12"},
+				//"Connection":    {"close"},
 				//"X-FluidDB-Client-URL": {clientURL},
 				//"X-FluidDB-Version":    {version},
 				//"Authorization":        {"Basic " + encodedUsernameAndPassword(user, pwd)},
-			}			
-
+			}
 
 			// add headers to the request
 			for _, h := range headers {
@@ -196,7 +195,7 @@ func main() {
 			}
 
 			shouldSave := saveResponses || len(saveStatus) > 0 && saveStatus.Includes(resp.StatusCode)
-			
+
 			// if a -M/--match option has been used, we always want to save if it matches
 			if match != "" {
 				if bytes.Contains(responseBody, []byte(match)) {
@@ -204,24 +203,46 @@ func main() {
 				}
 			}
 
-	
 			// if a -fh/--findheader option has been used, we want to print to screen
+			//if findheader != "" {
+			//	for k := range resp.Header {
+			//		if strings.Contains(k, findheader) {
+			//			fmt.Println(rawURL, "[Found", findheader, "in HTTP Header]")
+			//fmt.Println(k)
+			//		}
+			//	}
+			//}
+
+			// if a -fh/--findheader option has been used, we want to print to screen
+
+			//fmt.Println(string(b))
 			if findheader != "" {
-				for k := range resp.Header {
-					if strings.Contains(k,findheader) {
-						fmt.Println(rawURL, "[Found", findheader, "in HTTP Header]")
-					}
-		    	}
+				b, err := httputil.DumpResponse(resp, false)
+				if err != nil {
+					log.Fatalln(err)
+				}
+				//{
+				//for k, v := range resp.Header {
+				if strings.Contains(string(b), findheader) {
+					fmt.Println(rawURL, "[Found", findheader, "in HTTP Header] ")
+					//shouldSave = true
+				}
+				//}
+				//for k := range resp.Header {
+				//	if strings.Contains(k, findheader) {
+				//		fmt.Println(rawURL, "[Found", findheader, "in HTTP Header]")
+				//fmt.Println(k)
+				//	}
+				//}
 			}
-			
+
 			// if a -fb/--findbody option has been used, we want to print to screen
 			if findbody != "" {
 				if bytes.Contains(responseBody, []byte(findbody)) {
 					fmt.Println(rawURL, "[Found", findbody, "in HTTP Body] ")
 					//shouldSave = true
 				}
-			}						
-
+			}
 
 			if !shouldSave {
 				// Remarked due to only printing of found header and body
@@ -289,7 +310,7 @@ func main() {
 			// output the body filename for each URL
 			fmt.Printf("%s: %s %d\n", p, rawURL, resp.StatusCode)
 		}()
-	}	
+	}
 	wg.Wait()
 
 }
@@ -300,7 +321,7 @@ func newClient(keepAlives bool, proxy string) *http.Client {
 		MaxIdleConns:      30,
 		IdleConnTimeout:   time.Second,
 		DisableKeepAlives: !keepAlives,
-		TLSClientConfig:   &tls.Config{InsecureSkipVerify: true},		
+		TLSClientConfig:   &tls.Config{InsecureSkipVerify: true},
 		DialContext: (&net.Dialer{
 			Timeout:   time.Second * 10,
 			KeepAlive: time.Second,
@@ -318,9 +339,9 @@ func newClient(keepAlives bool, proxy string) *http.Client {
 	//}
 
 	return &http.Client{
-		Transport:     tr,
+		Transport: tr,
 		//CheckRedirect: re,
-		Timeout:       time.Second * 10,
+		Timeout: time.Second * 10,
 	}
 
 }
