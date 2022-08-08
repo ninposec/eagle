@@ -20,6 +20,12 @@ cat urls.txt | ./eagle -fh "headername" -fb "bodykeyword" -x http://127.0.0.1:80
 cat urls.txt | ./eagle -up "/package.json" -fb "dependencies" -x http://127.0.0.1:8080
 ```
 
+No errors:
+
+```
+cat urls.txt | eagle -up "/package.json" -fb "dependencies" 2>/dev/null | tee -a eagle_package.json.txt
+```
+
 Usage:
 
 
