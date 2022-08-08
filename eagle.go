@@ -213,15 +213,7 @@ func main() {
 				}
 			}
 
-			// if a -fh/--findheader option has been used, we want to print to screen
-			//if findheader != "" {
-			//	for k := range resp.Header {
-			//		if strings.Contains(k, findheader) {
-			//			fmt.Println(rawURL, "[Found", findheader, "in HTTP Header]")
-			//fmt.Println(k)
-			//		}
-			//	}
-			//}
+			statusOK := resp.StatusCode == 200
 
 			// if a -fh/--findheader option has been used, we want to print to screen
 
@@ -231,26 +223,19 @@ func main() {
 				if err != nil {
 					log.Fatalln(err)
 				}
-				//{
-				//for k, v := range resp.Header {
 				if strings.Contains(string(b), findheader) {
 					fmt.Print(rawURL, urlpath, " [Found ", findheader, " in HTTP Header] ", "\n")
 					//shouldSave = true
 				}
-				//}
-				//for k := range resp.Header {
-				//	if strings.Contains(k, findheader) {
-				//		fmt.Println(rawURL, "[Found", findheader, "in HTTP Header]")
-				//fmt.Println(k)
-				//	}
-				//}
 			}
 
 			// if a -fb/--findbody option has been used, we want to print to screen
 			if findbody != "" {
-				if bytes.Contains(responseBody, []byte(findbody)) {
-					fmt.Print(rawURL, urlpath, " [Found ", findbody, " in HTTP Body] ", "\n")
-					//shouldSave = true
+				if statusOK {
+					if bytes.Contains(responseBody, []byte(findbody)) {
+						fmt.Print(rawURL, urlpath, " [Found ", findbody, " in HTTP Body] ", "\n")
+						//shouldSave = true
+					}
 				}
 			}
 

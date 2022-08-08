@@ -16,6 +16,10 @@ Initiate HTTP Request, look for specific http header and http body string in res
 cat urls.txt | ./eagle -fh "headername" -fb "bodykeyword" -x http://127.0.0.1:8080 -H "x-test1: 123"
 ```
 
+```
+cat urls.txt | ./eagle -up "/package.json" -fb "dependencies" -x http://127.0.0.1:8080
+```
+
 Usage:
 
 
