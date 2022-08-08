@@ -6,11 +6,15 @@ Examples:
 
 Initiate HTTP Request, look for url path and a http response that contains string (case-sensitive).
 
+```
 cat urls.txt | ./eagle -up "/endpoint" -fb "bodykeyword" -x http://127.0.0.1:8080 
+```
 
 Initiate HTTP Request, look for specific http header and http body string in response. 
 
+```
 cat urls.txt | ./eagle -fh "headername" -fb "bodykeyword" -x http://127.0.0.1:8080 -H "x-test1: 123"
+```
 
 Usage:
 
