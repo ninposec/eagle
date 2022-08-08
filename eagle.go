@@ -216,8 +216,6 @@ func main() {
 			statusOK := resp.StatusCode == 200
 
 			// if a -fh/--findheader option has been used, we want to print to screen
-
-			//fmt.Println(string(b))
 			if findheader != "" {
 				b, err := httputil.DumpResponse(resp, false)
 				if err != nil {
