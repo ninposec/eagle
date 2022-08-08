@@ -33,6 +33,7 @@ func init() {
 			"  -d, --delay <delay>       Delay between issuing requests (ms)",
 			"  -H, --header <header>     Add a header to the request (can be specified multiple times)",
 			"  -hh, --hosth <string>     Insert arbitrary Host name to check for host header injection",
+			"  -up, --urlpath <string>   Insert URL Path or endpoint",
 			//"      --ignore-html         Don't save HTML files; useful when looking non-HTML files only",
 			//"      --ignore-empty        Don't save empty files",
 			"  -k, --keep-alive          Use HTTP Keep-Alive",
@@ -77,6 +78,11 @@ func main() {
 	var hosth string
 	flag.StringVar(&hosth, "hosth", "", "")
 	flag.StringVar(&hosth, "hh", "", "")
+	//flag.Var(&headers, "host", "")
+
+	var urlpath string
+	flag.StringVar(&urlpath, "urlpath", "", "")
+	flag.StringVar(&urlpath, "up", "", "")
 	//flag.Var(&headers, "host", "")
 
 	var method string
@@ -158,6 +164,10 @@ func main() {
 				req.Host = hosth
 			}
 
+			if urlpath != "" {
+				req.URL.Path = urlpath
+			}
+
 			req.Header = map[string][]string{
 				//"Content-Type":         {bodyType},
 				"User-Agent": {"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36"},
@@ -224,7 +234,7 @@ func main() {
 				//{
 				//for k, v := range resp.Header {
 				if strings.Contains(string(b), findheader) {
-					fmt.Println(rawURL, "[Found", findheader, "in HTTP Header] ")
+					fmt.Print(rawURL, urlpath, " [Found ", findheader, " in HTTP Header] ", "\n")
 					//shouldSave = true
 				}
 				//}
@@ -239,7 +249,7 @@ func main() {
 			// if a -fb/--findbody option has been used, we want to print to screen
 			if findbody != "" {
 				if bytes.Contains(responseBody, []byte(findbody)) {
-					fmt.Println(rawURL, "[Found", findbody, "in HTTP Body] ")
+					fmt.Print(rawURL, urlpath, " [Found ", findbody, " in HTTP Body] ", "\n")
 					//shouldSave = true
 				}
 			}
