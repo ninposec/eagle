@@ -41,4 +41,8 @@ Options:
   -x, --proxy <proxyURL>    Use the provided HTTP proxy
   
 ```
-TODO: Support for multiple -fh and -fb switches
+TODO: 
+
+- Better error handling
+- Support for http response code filter
+- Support for multiple -fh and -fb switches
