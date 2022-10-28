@@ -45,6 +45,7 @@ func init() {
 			"  -s, --save-status <code>  Save responses with given status code (can be specified multiple times)",
 			"  -S, --save                Save all responses",
 			"  -x, --proxy <proxyURL>    Use the provided HTTP proxy",
+			"  -so, --silentoutput       Do not print detailed output",
 			"",
 		}
 
@@ -112,6 +113,10 @@ func main() {
 	var proxy string
 	flag.StringVar(&proxy, "proxy", "", "")
 	flag.StringVar(&proxy, "x", "", "")
+
+	var silentOutput bool
+	flag.BoolVar(&silentOutput, "silentoutput", false, "")
+	flag.BoolVar(&silentOutput, "so", false, "")
 
 	flag.Parse()
 
@@ -221,18 +226,34 @@ func main() {
 				if err != nil {
 					log.Fatalln(err)
 				}
-				if strings.Contains(string(b), findheader) {
-					fmt.Print(rawURL, urlpath, " [Found ", findheader, " in HTTP Header] ", "\n")
-					//shouldSave = true
+				if silentOutput == false {
+					if strings.Contains(string(b), findheader) {
+						fmt.Print(rawURL, urlpath, " [Found ", findheader, " in HTTP Header] ", "\n")
+						//shouldSave = true
+					}
+				}
+				// if so flag set then Only print url if there is a match in the response
+				if silentOutput == true {
+					if strings.Contains(string(b), findheader) {
+						fmt.Print(rawURL, urlpath, "\n")
+					}
 				}
 			}
 
 			// if a -fb/--findbody option has been used, we want to print to screen
 			if findbody != "" {
 				if statusOK {
-					if bytes.Contains(responseBody, []byte(findbody)) {
-						fmt.Print(rawURL, urlpath, " [Found ", findbody, " in HTTP Body] ", "\n")
-						//shouldSave = true
+					if silentOutput == false {
+						if bytes.Contains(responseBody, []byte(findbody)) {
+							fmt.Print(rawURL, urlpath, " [Found ", findbody, " in HTTP Body] ", "\n")
+							//shouldSave = true
+						}
+					}
+					if silentOutput == true {
+						if bytes.Contains(responseBody, []byte(findbody)) {
+							fmt.Print(rawURL, urlpath, "\n")
+							//shouldSave = true
+						}
 					}
 				}
 			}
