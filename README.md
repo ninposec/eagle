@@ -49,10 +49,13 @@ Options:
   -s, --save-status <code>  Save responses with given status code (can be specified multiple times)
   -S, --save                Save all responses
   -x, --proxy <proxyURL>    Use the provided HTTP proxy
+  -so, --silentoutput       Do not print detailed output
   
 ```
 TODO: 
 
-- Better error handling
-- Support for http response code filter
-- Support for multiple -fh and -fb switches
+- switch for threadcount -c for faster run
+- better error handling
+- switch for timeout on requests - -timeout xx seconds
+- switch to read from files - "-upfile" to read URLs file input and "-Hfile" to read Request Headers from file input
+
