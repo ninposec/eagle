@@ -13,6 +13,9 @@ Golang must be installed.
 ```bash
 go install -v github.com/ninposec/eagle@latest
 ```
+This will download and install the tool in your system's $GOPATH/bin directory.
+
+
 Or via Git Clone:
 
 ```bash
@@ -57,7 +60,7 @@ Examples:
 Initiate HTTP Request, look for url path and a http response that contains string (case-sensitive).
 
 ```bash
-cat urls.txt | eagle -up "/endpoint" -fb "bodykeyword" -x http://127.0.0.1:8080 
+cat urls.txt | eagle -up "/endpoint" -fb "bodykeyword"
 ```
 
 Initiate HTTP Request, look for specific http header and http body string in response. 
@@ -90,4 +93,4 @@ cat urls.txt | eagle -up "/package.json" -fb '"dependencies":' -nd
 - switch to read Request Headers from file input
 
 ### Other
-Inspired by ProjectDiscovery and Tomnomnom tools.
+Inspired by ProjectDiscovery´s nuclei and Tomnomnom tools.
