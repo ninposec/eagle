@@ -1,37 +1,31 @@
-# eagle
+# Eagle
 
-Request URLs provided on stdin and read responses, print if hit.
+Eagle is a tool for sending HTTP requests and look for patterns in the response and print if there is a match in either response body og header. 
 
-Examples:
+Useful in Fingerprinting web appplications, during recon phase.
 
-Initiate HTTP Request, look for url path and a http response that contains string (case-sensitive).
+## Requirements
 
+Golang must be installed.
+
+## Installation
+
+```bash
+go install -v github.com/ninposec/eagle@latest
 ```
-cat urls.txt | ./eagle -up "/endpoint" -fb "bodykeyword" -x http://127.0.0.1:8080 
+Or via Git Clone:
+
+```bash
+git clone github.com/ninposec/eagle.git
+go build .
 ```
+## Usage
 
-Initiate HTTP Request, look for specific http header and http body string in response. 
+Eagle reads URLs from STDIN and sends HTTP requests to them. By default, it sends GET requests. You can use command-line options to customize the requests.
 
-```
-cat urls.txt | ./eagle -fh "headername" -fb "bodykeyword" -x http://127.0.0.1:8080 -H "x-test1: 123"
-```
-
-```
-cat urls.txt | ./eagle -up "/package.json" -fb "dependencies" -x http://127.0.0.1:8080
-```
-
-No errors:
-
-```
-cat urls.txt | eagle -up "/package.json" -fb "dependencies" 2>/dev/null | tee -a eagle_package.json.txt
-```
-
-Usage:
-
-
+```bash
 ./eagle -h
 
-```
 Request URLs provided on stdin and read responses 
 
 Options:
@@ -50,12 +44,48 @@ Options:
   -S, --save                Save all responses
   -x, --proxy <proxyURL>    Use the provided HTTP proxy
   -so, --silentoutput       Do not print detailed output
-  
+  -nd, --nodebug            Suppress error messages to console
 ```
-TODO: 
 
-- switch for threadcount -c for faster run
+
+## Use Cases
+
+Request URLs provided on stdin and read responses, print if hit.
+
+Examples:
+
+Initiate HTTP Request, look for url path and a http response that contains string (case-sensitive).
+
+```bash
+cat urls.txt | eagle -up "/endpoint" -fb "bodykeyword" -x http://127.0.0.1:8080 
+```
+
+Initiate HTTP Request, look for specific http header and http body string in response. 
+
+```bash
+cat urls.txt | eagle -fh "headername" -fb "bodykeyword" -x http://127.0.0.1:8080 -H "x-test1: 123"
+```
+
+```bash
+cat urls.txt | eagle -up "/" -nd -fb "s3.amazonaws.com"
+https://test.explample.com/ [Found s3.amazonaws.com in HTTP Body] 
+https://apps.xyz.net [Found s3.amazonaws.com in HTTP Body] 
+https://assets.example.com/ [Found s3.amazonaws.com in HTTP Body] 
+```
+
+Supress errors:
+
+```
+cat urls.txt | eagle -up "/package.json" -fb '"dependencies":' -nd
+```
+
+## ToDo
+
+- switch for threadcount -c for faster run or rate limit the requests
 - better error handling
 - switch for timeout on requests - -timeout xx seconds
-- switch to read from files - "-upfile" to read URLs file input and "-Hfile" to read Request Headers from file input
+- switch to read urls from file input
+- switch to read Request Headers from file input
 
+### Other
+Inspired by ProjectDiscovery and Tomnomnom tools.

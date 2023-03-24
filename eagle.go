@@ -46,6 +46,7 @@ func init() {
 			"  -S, --save                Save all responses",
 			"  -x, --proxy <proxyURL>    Use the provided HTTP proxy",
 			"  -so, --silentoutput       Do not print detailed output",
+			"  -nd, --nodebug            Suppress error messages to console",
 			"",
 		}
 
@@ -118,6 +119,10 @@ func main() {
 	flag.BoolVar(&silentOutput, "silentoutput", false, "")
 	flag.BoolVar(&silentOutput, "so", false, "")
 
+	var noDebug bool
+	flag.BoolVar(&noDebug, "nodebug", false, "")
+	flag.BoolVar(&noDebug, "nd", false, "")
+
 	flag.Parse()
 
 	// if no args are provided, print flags
@@ -125,6 +130,11 @@ func main() {
 		flag.Usage()
 		os.Exit(-1)
 	}
+
+	if noDebug {
+		os.Stderr, _ = os.Open(os.DevNull)
+	}
+	
 
 	delay := time.Duration(delayMs * 1000000)
 	client := newClient(keepAlives, proxy)
