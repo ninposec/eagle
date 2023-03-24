@@ -20,6 +20,7 @@ Or via Git Clone:
 
 ```bash
 git clone github.com/ninposec/eagle.git
+cd eagle
 go build .
 ```
 ## Usage
@@ -73,12 +74,13 @@ Look for s3 url inside the response body.
 
 ```bash
 cat urls.txt | eagle -up "/" -nd -fb "s3.amazonaws.com"
+
 https://test.explample.com/ [Found s3.amazonaws.com in HTTP Body] 
 https://apps.xyz.net [Found s3.amazonaws.com in HTTP Body] 
 https://assets.example.com/ [Found s3.amazonaws.com in HTTP Body] 
 ```
 
-Supress errors:
+Supress errors while looking for specific file containing particular response in the body:
 
 ```
 cat urls.txt | eagle -up "/package.json" -fb '"dependencies":' -nd
