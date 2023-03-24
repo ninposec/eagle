@@ -26,6 +26,9 @@ import (
 func init() {
 	flag.Usage = func() {
 		h := []string{
+			"Eagle v0.1 ",
+			"Author: ninposec ",
+			"",
 			"Request URLs provided on stdin and read responses ",
 			"",
 			"Options:",
