@@ -66,6 +66,8 @@ Initiate HTTP Request, look for specific http header and http body string in res
 cat urls.txt | eagle -fh "headername" -fb "bodykeyword" -x http://127.0.0.1:8080 -H "x-test1: 123"
 ```
 
+Look for s3 url inside the response body.
+
 ```bash
 cat urls.txt | eagle -up "/" -nd -fb "s3.amazonaws.com"
 https://test.explample.com/ [Found s3.amazonaws.com in HTTP Body] 
