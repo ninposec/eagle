@@ -8,6 +8,8 @@ Useful in Fingerprinting web appplications, during recon phase.
 
 Golang must be installed.
 
+
+
 ## Installation
 
 ```bash
@@ -23,6 +25,19 @@ git clone github.com/ninposec/eagle.git
 cd eagle
 go build .
 ```
+
+### Compile binary to different platforms
+
+Binary can easy be cross-compiled to run on Linux/Windows/MacOS.
+
+Example:
+
+Cross Compile to MacOS, Linux or Windows:
+
+GOOS=darwin GOARCH=amd64 go build
+GOOS=windows GOARCH=amd64 go build
+GOOS=linux GOARCH=amd64 go build
+
 ## Usage
 
 Eagle reads URLs from STDIN and sends HTTP requests to them. By default, it sends GET requests. You can use command-line options to customize the requests.
