@@ -29,7 +29,7 @@ func init() {
 			"Eagle v0.1 ",
 			"Author: ninposec ",
 			"",
-			"Request URLs provided on stdin and read responses ",
+			"Find specific HTTP Responses to Fingerprint web apps. ",
 			"",
 			"Options:",
 			"  -b, --body <data>         Request body",
