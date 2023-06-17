@@ -26,7 +26,7 @@ import (
 func init() {
 	flag.Usage = func() {
 		h := []string{
-			"Eagle v0.1 ",
+			"Eagle v0.2 ",
 			"Author: ninposec ",
 			"",
 			"Find specific HTTP Responses to Fingerprint web apps. ",
@@ -126,6 +126,10 @@ func main() {
 	flag.BoolVar(&noDebug, "nodebug", false, "")
 	flag.BoolVar(&noDebug, "nd", false, "")
 
+	var noRedir bool
+	flag.BoolVar(&noRedir, "noredir", false, "")
+	flag.BoolVar(&noRedir, "nr", false, "")
+
 	flag.Parse()
 
 	// if no args are provided, print flags
@@ -137,10 +141,9 @@ func main() {
 	if noDebug {
 		os.Stderr, _ = os.Open(os.DevNull)
 	}
-	
 
 	delay := time.Duration(delayMs * 1000000)
-	client := newClient(keepAlives, proxy)
+	client := newClient(keepAlives, noRedir, proxy)
 	prefix := outputDir
 
 	var wg sync.WaitGroup
@@ -342,7 +345,7 @@ func main() {
 
 }
 
-func newClient(keepAlives bool, proxy string) *http.Client {
+func newClient(keepAlives bool, noRedir bool, proxy string) *http.Client {
 
 	tr := &http.Transport{
 		MaxIdleConns:      30,
@@ -364,11 +367,17 @@ func newClient(keepAlives bool, proxy string) *http.Client {
 	//re := func(req *http.Request, via []*http.Request) error {
 	//	return http.ErrUseLastResponse
 	//}
+	checkRedirectFunc := func(req *http.Request, via []*http.Request) error {
+		if noRedir {
+			return http.ErrUseLastResponse
+		}
+		return nil
+	}
 
 	return &http.Client{
-		Transport: tr,
-		//CheckRedirect: re,
-		Timeout: time.Second * 10,
+		Transport:     tr,
+		CheckRedirect: checkRedirectFunc,
+		Timeout:       time.Second * 10,
 	}
 
 }
