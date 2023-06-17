@@ -47,7 +47,10 @@ Eagle reads URLs from STDIN and sends HTTP requests to them. By default, it send
 ```bash
 ./eagle -h
 
-Request URLs provided on stdin and read responses 
+Eagle v0.2
+Author: ninposec
+
+Find specific HTTP Responses to Fingerprint web apps.
 
 Options:
   -b, --body <data>         Request body
@@ -66,6 +69,7 @@ Options:
   -x, --proxy <proxyURL>    Use the provided HTTP proxy
   -so, --silentoutput       Do not print detailed output
   -nd, --nodebug            Suppress error messages to console
+  -nr, --noredir            Suppress error messages to console
 ```
 
 
