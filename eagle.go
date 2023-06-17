@@ -50,6 +50,7 @@ func init() {
 			"  -x, --proxy <proxyURL>    Use the provided HTTP proxy",
 			"  -so, --silentoutput       Do not print detailed output",
 			"  -nd, --nodebug            Suppress error messages to console",
+			"  -nr, --noredir            Suppress error messages to console",
 			"",
 		}
 
